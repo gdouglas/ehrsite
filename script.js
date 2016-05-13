@@ -5,6 +5,7 @@ startDate = 0,
 endDate   = 99999999900000,
 tdate = "",
 qsRegex,
+sig,
 $grid = $('#ProgressNotes-2').isotope({
   itemSelector: '.type-post',
     layoutMode: 'masonry',
@@ -31,31 +32,6 @@ $('#sort-date').click(function(){
  * filters items with a date later than below
  *
  */
-$('#filter').click(function(){
-  $grid.isotope({
-  // filter element with numbers greater than 50
-  filter: function() {
-    // _this_ is the item element. Get text of element's .number
-    tdate = Date.parse($(this).find('h2').text());
-    // return true to show, false to hide
-    return checkDate( tdate);
-  }
-});
-});
-
-
-$('#filter2').click(function(){
-  $grid.isotope({
-    // filter element with numbers greater than 50
-    filter: function() {
-      // _this_ is the item element. Get text of element's .number
-      sig = $(this).find(" p:contains(Signature:)");
-      //check if the string matches the text
-      return qsRegex ? $(sig).text().match( qsRegex ) : true;
-    }
-  });
-});
-
 
 function checkDate(id) {
   
@@ -112,6 +88,7 @@ function updateRange(start, end){
     } else {
       endDate = 99999999900000;
     }
+    filterDates();
 }
 function getVals(){
     sd = Date.parse($('#from').val());
@@ -126,12 +103,24 @@ function searchFilter() {
   $grid.isotope({
     filter: function() {
       //console.log($(this).find("Signature:"));
-      return qsRegex ? $(this).text().match( qsRegex ) : true;
+      sig = $(this).find(" p:contains(Signature:)");
+      return qsRegex ? $(sig).text().match( qsRegex ) : true;
     }
   });
-
 }
 
+
+function filterDates(){
+  $grid.isotope({
+  // filter element with numbers greater than 50
+    filter: function() {
+      // _this_ is the item element. Get text of element's .number
+      tdate = Date.parse($(this).find('h2').text());
+      // return true to show, false to hide
+      return checkDate( tdate);
+    }
+  });  
+}
 
 function debounce( fn, threshold ) {
   var timeout;
